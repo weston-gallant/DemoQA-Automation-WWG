@@ -18,7 +18,7 @@ def step(context):
 
 @when('I fill in the required fields')
 def step(context):
-    # We fill form
+    # We fill out required fields in the form
     context.driver.find_element(By.ID, "firstName").send_keys("Weston")
     context.driver.find_element(By.ID, "lastName").send_keys("Gallant")
     context.driver.find_element(By.ID, "userEmail").send_keys("DJWestyOwn@test.com")
