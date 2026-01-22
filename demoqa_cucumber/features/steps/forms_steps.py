@@ -44,7 +44,6 @@ def step(context):
 def step(context):    
     # We want to close the pop-up modal after
     context.driver.find_element(By.ID, "closeLargeModal").click()
-    context.driver.find_element(By.ID, "closeLargeModal").click()
     # Using the below wait, I can replace other waits to make them more dynamic
     WebDriverWait(context.driver, 5).until_not(EC.visibility_of_element_located((By.CLASS_NAME, "modal-header")))
     print("✅ Modal closed and verified gone")
