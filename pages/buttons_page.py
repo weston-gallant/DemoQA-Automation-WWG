@@ -8,7 +8,7 @@ class ButtonsPage:
         self.driver = driver
         self.wait = WebDriverWait(driver, 5)
         
-        # Locators
+        # Button locators
         self.double_click_btn = (By.ID, "doubleClickBtn")
         self.right_click_btn = (By.ID, "rightClickBtn")
         self.dynamic_click_btn = (By.XPATH, "//button[text()='Click Me']")

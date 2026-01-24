@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from data.practice_form_data import PRACTICE_FORM_DEFAULT_USER
 
 class PracticeFormsPage:
     def __init__(self, driver):
@@ -17,14 +18,14 @@ class PracticeFormsPage:
         self.close_modal_btn = (By.ID, "closeLargeModal")
         self.modal_header = (By.CLASS_NAME, "modal-header")
     
-    def fill_required_fields(self, first_name="Weston", last_name="Gallant", 
-                           email="DJWestyOwn@test.com", phone="1234567890"):
-        self.driver.find_element(*self.first_name).send_keys(first_name)
-        self.driver.find_element(*self.last_name).send_keys(last_name)
-        self.driver.find_element(*self.user_email).send_keys(email)
+    def fill_required_fields(self, user_data=PRACTICE_FORM_DEFAULT_USER):
+        """Fill DemoQA Practice Form required fields with provided data"""
+        self.driver.find_element(*self.first_name).send_keys(user_data["first_name"])
+        self.driver.find_element(*self.last_name).send_keys(user_data["last_name"])
+        self.driver.find_element(*self.user_email).send_keys(user_data["email"])
         self.driver.find_element(*self.gender_male).click()
-        self.driver.find_element(*self.user_number).send_keys(phone)
-        print("✅ Required fields filled")
+        self.driver.find_element(*self.user_number).send_keys(user_data["phone"])
+        print("✅ Practice form required fields filled")
     
     def submit_form(self):
         submit_btn = self.driver.find_element(*self.submit_btn)
