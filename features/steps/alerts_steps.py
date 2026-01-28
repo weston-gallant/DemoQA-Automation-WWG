@@ -72,3 +72,13 @@ def step_impl(context, name):
 @then('I see the prompt result text "You entered {name}"')
 def step_impl(context, name):
     context.alerts_page.assert_prompt_result_contains(name)
+
+@when('I enter "{name}" into the prompt alert but dismiss it')
+def step_impl(context, name):
+    context.prompt_name = name
+    context.alerts_page.wait_for_alert_and_send_keys(name, accept=False)
+
+
+@then('I do not see any prompt result text')
+def step_impl(context):
+    context.alerts_page.assert_no_prompt_result()

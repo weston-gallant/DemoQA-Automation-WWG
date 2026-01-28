@@ -33,3 +33,9 @@ Feature: DemoQA Alerts coverage
       | name      |
       | Weston    |
       | Automation |
+
+  Scenario: User dismisses the prompt alert and sees no result
+    Given I am on the alerts page
+    When I trigger the prompt alert
+    And I enter "DismissMe" into the prompt alert but dismiss it
+    Then I do not see any prompt result text
