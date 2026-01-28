@@ -37,7 +37,11 @@ class TextBoxPage:
         self.driver.find_element(*self.permanent_address).send_keys(user_data["permanent_address"])
 
     def submit_form(self):
-        self.driver.find_element(*self.submit_btn).click()
+        submit = self.driver.find_element(*self.submit_btn)
+        # Scroll into view to avoid being hidden/covered
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", submit)
+        # Click via JS to bypass ad overlays intercepting the click
+        self.driver.execute_script("arguments[0].click();", submit)
         print("✅ Text Box form submitted")
 
     def verify_output_matches(self, user_data):
