@@ -1,5 +1,6 @@
 import os
 import requests
+import allure
 from behave import fixture, use_fixture
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -18,7 +19,6 @@ def browser_fixture(context):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--window-size=1920,1080")
 
-    # Cache driver for a few days to reduce CI network flakiness
     driver_path = ChromeDriverManager().install()
     service = Service(driver_path)
 
@@ -38,14 +38,29 @@ def browser_fixture(context):
 def before_all(context):
     use_fixture(browser_fixture, context)
 
+
 def before_scenario(context, scenario):
     """
-    Lightweight health check: if DemoQA is unreachable from CI/local,
+    Lightweight health check: if DemoQA is unreachable from CI,
     skip the scenario instead of hard-failing with long timeouts.
     """
+    if os.getenv("CI", "false").lower() != "true":
+        return  # skip health check locally
+
     try:
         resp = requests.get("https://demoqa.com", timeout=5)
         if resp.status_code >= 500:
             scenario.skip("DemoQA is unavailable (5xx from demoqa.com)")
     except requests.RequestException:
         scenario.skip("DemoQA is unreachable from current environment")
+
+
+def after_step(context, step):
+    """Attach a screenshot to Allure only when a step fails."""
+    if step.status == "failed" and hasattr(context, "driver"):
+        screenshot = context.driver.get_screenshot_as_png()
+        allure.attach(
+            screenshot,
+            name=f"Failure - {step.name}",
+            attachment_type=allure.attachment_type.PNG,
+        )

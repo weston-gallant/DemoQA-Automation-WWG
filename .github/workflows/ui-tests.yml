@@ -33,9 +33,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Behave regression suite
+      - name: Run Behave regression suite with Allure
         run: |
-          behave -t @regression --no-capture
+          behave -t @regression \
+            -f allure_behave.formatter:AllureFormatter \
+            -o reports/allure-results \
+            --no-capture
 
       - name: Archive test results (logs)
         if: always()
