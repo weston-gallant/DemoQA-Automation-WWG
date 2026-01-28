@@ -23,28 +23,34 @@ class PracticeFormsPage:
         # Adjust this locator after inspecting DemoQA's validation CSS
         self.required_error_fields = (By.CSS_SELECTOR, ".was-validated .is-invalid")
 
-    def fill_required_fields(self, user_data=PRACTICE_FORM_DEFAULT_USER):
-        """Fill DemoQA Practice Form required fields with provided data"""
-        self.driver.find_element(*self.first_name).send_keys(user_data["first_name"])
-        self.driver.find_element(*self.last_name).send_keys(user_data["last_name"])
-        self.driver.find_element(*self.user_email).send_keys(user_data["email"])
-        self.driver.find_element(*self.gender_male).click()
-        self.driver.find_element(*self.user_number).send_keys(user_data["phone"])
-        print("✅ Practice form required fields filled")
+def fill_required_fields(self, user_data=PRACTICE_FORM_DEFAULT_USER):
+    self.driver.find_element(*self.first_name).send_keys(user_data["first_name"])
+    self.driver.find_element(*self.last_name).send_keys(user_data["last_name"])
+    self.driver.find_element(*self.user_email).send_keys(user_data["email"])
 
-    # NEW: fill form with arbitrary user data
-    def fill_with_custom_data(self, user_data):
-        self.driver.find_element(*self.first_name).clear()
-        self.driver.find_element(*self.last_name).clear()
-        self.driver.find_element(*self.user_email).clear()
-        self.driver.find_element(*self.user_number).clear()
+    gender_el = self.driver.find_element(*self.gender_male)
+    self.driver.execute_script("arguments[0].scrollIntoView(true);", gender_el)
+    self.driver.execute_script("arguments[0].click();", gender_el)
 
-        self.driver.find_element(*self.first_name).send_keys(user_data["first_name"])
-        self.driver.find_element(*self.last_name).send_keys(user_data["last_name"])
-        self.driver.find_element(*self.user_email).send_keys(user_data["email"])
-        self.driver.find_element(*self.user_number).send_keys(user_data["phone"])
-        self.driver.find_element(*self.gender_male).click()
-        print("✅ Practice form filled with custom data")
+    self.driver.find_element(*self.user_number).send_keys(user_data["phone"])
+    print("✅ Practice form required fields filled")
+
+def fill_with_custom_data(self, user_data):
+    self.driver.find_element(*self.first_name).clear()
+    self.driver.find_element(*self.last_name).clear()
+    self.driver.find_element(*self.user_email).clear()
+    self.driver.find_element(*self.user_number).clear()
+
+    self.driver.find_element(*self.first_name).send_keys(user_data["first_name"])
+    self.driver.find_element(*self.last_name).send_keys(user_data["last_name"])
+    self.driver.find_element(*self.user_email).send_keys(user_data["email"])
+    self.driver.find_element(*self.user_number).send_keys(user_data["phone"])
+
+    gender_el = self.driver.find_element(*self.gender_male)
+    self.driver.execute_script("arguments[0].scrollIntoView(true);", gender_el)
+    self.driver.execute_script("arguments[0].click();", gender_el)
+
+    print("✅ Practice form filled with custom data")
 
     def submit_form(self):
         submit_btn = self.driver.find_element(*self.submit_btn)
