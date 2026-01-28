@@ -1,8 +1,20 @@
 @regression
-Feature: DemoQA Buttons coverage
-  Scenario: User can click all button types
+Feature: DemoQA Buttons interactions
+
+  Scenario: Double click shows correct message
     Given I am on the buttons page
+    Then I do not see any button messages
     When I click the double click button
-    And I right click the right click button  
-    And I click the dynamic click button
-    Then I see all button messages
+    Then I see the double click message only
+
+  Scenario: Right click shows correct message
+    Given I am on the buttons page
+    Then I do not see any button messages
+    When I right click the right click button
+    Then I see the right click message only
+
+  Scenario: Dynamic click shows correct message
+    Given I am on the buttons page
+    Then I do not see any button messages
+    When I click the dynamic click button
+    Then I see the dynamic click message only
