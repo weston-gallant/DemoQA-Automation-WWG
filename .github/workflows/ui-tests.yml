@@ -40,10 +40,11 @@ jobs:
             -o reports/allure-results \
             --no-capture
 
-      - name: Archive test results (logs)
+      - name: Archive Allure results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: behave-logs
-          path: .
-          if-no-files-found: ignore
+          name: allure-results
+          path: reports/allure-results
+          if-no-files-found: warn
+
