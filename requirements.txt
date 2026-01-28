@@ -1,4 +1,4 @@
 behave
 selenium
 webdriver-manager
-allure-behave
+allure-behave==2.13.1
