@@ -2,9 +2,9 @@ name: UI Regression Tests
 
 on:
   push:
-    branches: [ environment-headless ]
+    branches: [ main ]
   pull_request:
-    branches: [ environment-headless ]
+    branches: [ main ]
 
 jobs:
   ui-tests:
