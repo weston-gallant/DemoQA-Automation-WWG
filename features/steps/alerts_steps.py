@@ -1,4 +1,5 @@
 from behave import given, when, then
+from selenium.common.exceptions import NoAlertPresentException
 from pages.alerts_page import AlertsPage
 from data.alerts_data import CONFIRM_RESULT_OK, CONFIRM_RESULT_CANCEL
 
@@ -39,7 +40,14 @@ def step_impl(context):
 
 @when('I accept the confirm alert')
 def step_impl(context):
-    context.alerts_page.wait_for_alert_and_accept()
+    # Try to accept immediately; fallback to explicit wait if needed
+    try:
+        alert = context.driver.switch_to.alert
+        print(f"ℹ️ Alert text: {alert.text}")
+        alert.accept()
+        print("✅ Confirm alert accepted (direct)")
+    except NoAlertPresentException:
+        context.alerts_page.wait_for_alert_and_accept()
 
 
 @when('I dismiss the confirm alert')
@@ -49,7 +57,7 @@ def step_impl(context):
 
 @then('I see the confirm result text "{expected_text}"')
 def step_impl(context, expected_text):
-    # Use constants for stronger typing in your code, but feature string drives expectation
+    # Feature text drives expectation; constants keep it DRY in code
     if expected_text == CONFIRM_RESULT_OK:
         context.alerts_page.assert_confirm_result_equals(CONFIRM_RESULT_OK)
     elif expected_text == CONFIRM_RESULT_CANCEL:
@@ -72,6 +80,7 @@ def step_impl(context, name):
 @then('I see the prompt result text "You entered {name}"')
 def step_impl(context, name):
     context.alerts_page.assert_prompt_result_contains(name)
+
 
 @when('I enter "{name}" into the prompt alert but dismiss it')
 def step_impl(context, name):
