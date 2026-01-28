@@ -20,20 +20,25 @@ class AlertsPage:
         self.confirm_result = (By.ID, "confirmResult")
         self.prompt_result = (By.ID, "promptResult")
 
+    def _js_click(self, locator):
+        element = self.wait.until(EC.element_to_be_clickable(locator))
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
+        self.driver.execute_script("arguments[0].click();", element)
+
     def click_simple_alert(self):
-        self.driver.find_element(*self.simple_alert_btn).click()
+        self._js_click(self.simple_alert_btn)
         print("✅ Simple alert triggered")
 
     def click_timer_alert(self):
-        self.driver.find_element(*self.timer_alert_btn).click()
+        self._js_click(self.timer_alert_btn)
         print("✅ Timer alert triggered")
 
     def click_confirm_alert(self):
-        self.driver.find_element(*self.confirm_alert_btn).click()
+        self._js_click(self.confirm_alert_btn)
         print("✅ Confirm alert triggered")
 
     def click_prompt_alert(self):
-        self.driver.find_element(*self.prompt_alert_btn).click()
+        self._js_click(self.prompt_alert_btn)
         print("✅ Prompt alert triggered")
 
     def wait_for_alert_and_accept(self):
@@ -60,7 +65,6 @@ class AlertsPage:
             print("✅ Prompt alert dismissed after typing")
 
     def assert_confirm_result_equals(self, expected: str):
-        # Wait for confirm result to appear
         element = self.wait.until(EC.visibility_of_element_located(self.confirm_result))
         actual = element.text.strip()
         assert actual == expected, f"Expected confirm result '{expected}', got '{actual}'"
@@ -73,26 +77,12 @@ class AlertsPage:
         assert actual == expected, f"Expected prompt result '{expected}', got '{actual}'"
         print(f"✅ Prompt result text matches: {actual}")
 
-    def wait_for_alert_and_send_keys(self, text: str, accept: bool = True):
-        alert = self.wait.until(EC.alert_is_present())
-        print(f"ℹ️ Prompt alert text: {alert.text}")
-        alert.send_keys(text)
-        if accept:
-            alert.accept()
-            print(f"✅ Prompt alert accepted with text: {text}")
-        else:
-            alert.dismiss()
-            print("✅ Prompt alert dismissed after typing")
-
     def assert_no_prompt_result(self):
         try:
             self.wait.until(EC.visibility_of_element_located(self.prompt_result))
-            # If we get here, text appeared (failure for this scenario)
             actual = self.driver.find_element(*self.prompt_result).text.strip()
             raise AssertionError(
                 f"Prompt result should not be visible after dismiss, but got: '{actual}'"
             )
         except TimeoutException:
-            # Expected: no prompt result
             print("✅ No prompt result text visible after dismiss")
-
