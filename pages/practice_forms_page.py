@@ -20,37 +20,38 @@ class PracticeFormsPage:
         self.close_modal_btn = (By.ID, "closeLargeModal")
         self.modal_header = (By.CLASS_NAME, "modal-header")
 
-        # Adjust this locator after inspecting DemoQA's validation CSS
+        # Optional
         self.required_error_fields = (By.CSS_SELECTOR, ".was-validated .is-invalid")
 
-def fill_required_fields(self, user_data=PRACTICE_FORM_DEFAULT_USER):
-    self.driver.find_element(*self.first_name).send_keys(user_data["first_name"])
-    self.driver.find_element(*self.last_name).send_keys(user_data["last_name"])
-    self.driver.find_element(*self.user_email).send_keys(user_data["email"])
+    def fill_required_fields(self, user_data=PRACTICE_FORM_DEFAULT_USER):
+        """Fill DemoQA Practice Form required fields with provided data"""
+        self.driver.find_element(*self.first_name).send_keys(user_data["first_name"])
+        self.driver.find_element(*self.last_name).send_keys(user_data["last_name"])
+        self.driver.find_element(*self.user_email).send_keys(user_data["email"])
 
-    gender_el = self.driver.find_element(*self.gender_male)
-    self.driver.execute_script("arguments[0].scrollIntoView(true);", gender_el)
-    self.driver.execute_script("arguments[0].click();", gender_el)
+        gender_el = self.driver.find_element(*self.gender_male)
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", gender_el)
+        self.driver.execute_script("arguments[0].click();", gender_el)
 
-    self.driver.find_element(*self.user_number).send_keys(user_data["phone"])
-    print("✅ Practice form required fields filled")
+        self.driver.find_element(*self.user_number).send_keys(user_data["phone"])
+        print("✅ Practice form required fields filled")
 
-def fill_with_custom_data(self, user_data):
-    self.driver.find_element(*self.first_name).clear()
-    self.driver.find_element(*self.last_name).clear()
-    self.driver.find_element(*self.user_email).clear()
-    self.driver.find_element(*self.user_number).clear()
+    def fill_with_custom_data(self, user_data):
+        self.driver.find_element(*self.first_name).clear()
+        self.driver.find_element(*self.last_name).clear()
+        self.driver.find_element(*self.user_email).clear()
+        self.driver.find_element(*self.user_number).clear()
 
-    self.driver.find_element(*self.first_name).send_keys(user_data["first_name"])
-    self.driver.find_element(*self.last_name).send_keys(user_data["last_name"])
-    self.driver.find_element(*self.user_email).send_keys(user_data["email"])
-    self.driver.find_element(*self.user_number).send_keys(user_data["phone"])
+        self.driver.find_element(*self.first_name).send_keys(user_data["first_name"])
+        self.driver.find_element(*self.last_name).send_keys(user_data["last_name"])
+        self.driver.find_element(*self.user_email).send_keys(user_data["email"])
+        self.driver.find_element(*self.user_number).send_keys(user_data["phone"])
 
-    gender_el = self.driver.find_element(*self.gender_male)
-    self.driver.execute_script("arguments[0].scrollIntoView(true);", gender_el)
-    self.driver.execute_script("arguments[0].click();", gender_el)
+        gender_el = self.driver.find_element(*self.gender_male)
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", gender_el)
+        self.driver.execute_script("arguments[0].click();", gender_el)
 
-    print("✅ Practice form filled with custom data")
+        print("✅ Practice form filled with custom data")
 
     def submit_form(self):
         submit_btn = self.driver.find_element(*self.submit_btn)
@@ -59,7 +60,7 @@ def fill_with_custom_data(self, user_data):
         print("✅ Form submitted")
 
     def verify_success_message(self):
-        self.wait.until(lambda driver: "Thanks for submitting" in driver.page_source)
+        self.wait.until(lambda d: "Thanks for submitting" in d.page_source)
         print("✅ SUCCESS verified!")
 
     def close_modal(self):
@@ -67,21 +68,16 @@ def fill_with_custom_data(self, user_data):
         self.wait.until_not(EC.visibility_of_element_located(self.modal_header))
         print("✅ Modal closed and verified gone")
 
-    # Verify that practice form submission was not successful
     def verify_required_field_errors(self):
         """Verify that the form was NOT submitted when required fields are empty."""
-        # 1) The success modal text should NOT appear
         try:
-            self.wait.until(lambda driver: "Thanks for submitting" in driver.page_source)
+            self.wait.until(lambda d: "Thanks for submitting" in d.page_source)
             raise AssertionError(
                 "Form submitted successfully, but should have failed due to empty required fields"
             )
         except TimeoutException:
-            # Expected: no success message
             pass
 
-        # 2) Still on the same form URL (no navigation)
         assert "automation-practice-form" in self.driver.current_url, \
             "Expected to remain on the practice form page after invalid submit"
-
         print("✅ Required-field submission prevented (no success modal)")

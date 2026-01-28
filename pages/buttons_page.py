@@ -2,6 +2,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import StaleElementReferenceException
+import time
 
 
 class ButtonsPage:
@@ -47,9 +49,19 @@ class ButtonsPage:
         print("✅ No button messages visible")
 
     def assert_only_message_visible(self, expected_locator):
-        # Wait for expected message to be visible
-        self.wait.until(EC.visibility_of_element_located(expected_locator))
-        elements = self.driver.find_elements(*expected_locator)
-        visible = any(e.is_displayed() for e in elements)
+        # Poll for up to 5 seconds for the expected message to become visible
+        end_time = time.time() + 5
+        visible = False
+
+        while time.time() < end_time and not visible:
+            try:
+                elements = self.driver.find_elements(*expected_locator)
+                visible = any(e.is_displayed() for e in elements)
+            except StaleElementReferenceException:
+                visible = False
+
+            if not visible:
+                time.sleep(0.25)
+
         assert visible, "Expected button message should be visible"
-        print("✅ Expected message visible (others ignored for robustness)")
+        print("✅ Expected message visible (polled)")
