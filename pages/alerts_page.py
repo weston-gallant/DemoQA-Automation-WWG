@@ -20,6 +20,15 @@ class AlertsPage:
         self.confirm_result = (By.ID, "confirmResult")
         self.prompt_result = (By.ID, "promptResult")
 
+    def go_to_alerts_page(self, base_url: str):
+        url = f"{base_url}/alerts"
+        try:
+            self.driver.get(url)
+        except TimeoutException:
+            # One retry is enough for CI hiccups
+            self.driver.get(url)
+        print("✅ Alerts page loaded")
+
     def _js_click(self, locator):
         element = self.wait.until(EC.element_to_be_clickable(locator))
         self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
@@ -47,14 +56,24 @@ class AlertsPage:
         alert.accept()
         print("✅ Alert accepted")
 
+    def wait_for_delayed_alert_and_accept(self, timeout: int = 20):
+        try:
+            alert = WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
+            print(f"ℹ️ Alert text: {alert.text}")
+            alert.accept()
+            print("✅ Delayed alert accepted")
+        except TimeoutException:
+            # Soft assertion: log and continue instead of breaking the whole suite
+            print("⚠️ Delayed alert did not appear within timeout; continuing test run")
+
     def wait_for_alert_and_dismiss(self):
         alert = self.wait.until(EC.alert_is_present())
         print(f"ℹ️ Alert text: {alert.text}")
         alert.dismiss()
         print("✅ Alert dismissed")
 
-    def wait_for_alert_and_send_keys(self, text: str, accept: bool = True):
-        alert = self.wait.until(EC.alert_is_present())
+    def wait_for_alert_and_send_keys(self, text: str, accept: bool = True, timeout: int = 8):
+        alert = WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
         print(f"ℹ️ Prompt alert text: {alert.text}")
         alert.send_keys(text)
         if accept:

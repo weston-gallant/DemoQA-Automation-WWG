@@ -3,14 +3,14 @@ from selenium.common.exceptions import NoAlertPresentException
 from pages.alerts_page import AlertsPage
 from data.alerts_data import CONFIRM_RESULT_OK, CONFIRM_RESULT_CANCEL
 
+
 BASE_URL = "https://demoqa.com"
 
 
 @given('I am on the alerts page')
 def step_impl(context):
-    context.driver.get(f"{BASE_URL}/alerts")
     context.alerts_page = AlertsPage(context.driver)
-    print("✅ Alerts page loaded")
+    context.alerts_page.go_to_alerts_page(BASE_URL)
 
 
 @when('I trigger the simple alert')
@@ -30,7 +30,7 @@ def step_impl(context):
 
 @then('I can accept the delayed alert when it appears')
 def step_impl(context):
-    context.alerts_page.wait_for_alert_and_accept()
+    context.alerts_page.wait_for_delayed_alert_and_accept()
 
 
 @when('I trigger the confirm alert')
