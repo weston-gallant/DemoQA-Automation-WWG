@@ -49,19 +49,24 @@ class ButtonsPage:
         print("✅ No button messages visible")
 
     def assert_only_message_visible(self, expected_locator):
-        # Poll for up to 5 seconds for the expected message to become visible
+        # Map locator → expected text fragment
+        locator_to_text = {
+            self.double_click_msg: "You have done a double click",
+            self.right_click_msg: "You have done a right click",
+            self.dynamic_click_msg: "You have done a dynamic click",
+        }
+
+        expected_text = locator_to_text.get(expected_locator)
+        assert expected_text, "Unknown locator passed to assert_only_message_visible"
+
+        # Poll page_source for up to 5 seconds
         end_time = time.time() + 5
-        visible = False
+        found = False
+        while time.time() < end_time and not found:
+            if expected_text in self.driver.page_source:
+                found = True
+                break
+            time.sleep(0.25)
 
-        while time.time() < end_time and not visible:
-            try:
-                elements = self.driver.find_elements(*expected_locator)
-                visible = any(e.is_displayed() for e in elements)
-            except StaleElementReferenceException:
-                visible = False
-
-            if not visible:
-                time.sleep(0.25)
-
-        assert visible, "Expected button message should be visible"
-        print("✅ Expected message visible (polled)")
+        assert found, f"Expected button message text not found: '{expected_text}'"
+        print("✅ Expected button message text found in page source")

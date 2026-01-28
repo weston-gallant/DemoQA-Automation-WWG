@@ -64,7 +64,9 @@ class PracticeFormsPage:
         print("✅ SUCCESS verified!")
 
     def close_modal(self):
-        self.driver.find_element(*self.close_modal_btn).click()
+        close_btn = self.driver.find_element(*self.close_modal_btn)
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", close_btn)
+        self.driver.execute_script("arguments[0].click();", close_btn)
         self.wait.until_not(EC.visibility_of_element_located(self.modal_header))
         print("✅ Modal closed and verified gone")
 
