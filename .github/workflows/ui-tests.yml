@@ -2,9 +2,9 @@ name: UI Regression Tests
 
 on:
   push:
-    branches: [ environment-headless ]
+    branches: [ main ]
   pull_request:
-    branches: [ environment-headless ]
+    branches: [ main ]
 
 jobs:
   ui-tests:
@@ -33,14 +33,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Behave regression suite
+      - name: Run Behave regression suite with Allure
         run: |
-          behave -t @regression --no-capture
+          behave -t @regression \
+            -f allure_behave.formatter:AllureFormatter \
+            -o reports/allure-results \
+            --no-capture
 
-      - name: Archive test results (logs)
+      - name: Archive Allure results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: behave-logs
-          path: .
-          if-no-files-found: ignore
+          name: allure-results
+          path: reports/allure-results
+          if-no-files-found: warn
+
