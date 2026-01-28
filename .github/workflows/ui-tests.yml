@@ -35,10 +35,7 @@ jobs:
 
       - name: Run Behave regression suite with Allure
         run: |
-          behave -t @regression \
-            -f allure_behave.formatter:AllureFormatter \
-            -o reports/allure-results \
-            --no-capture
+          behave -t @regression
 
       - name: Archive Allure results
         if: always()

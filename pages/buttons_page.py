@@ -16,6 +16,7 @@ class ButtonsPage:
         self.right_click_btn = (By.ID, "rightClickBtn")
         self.dynamic_click_btn = (By.XPATH, "//button[text()='Click Me']")
 
+        # Message locators
         self.double_click_msg = (By.ID, "doubleClickMessage")
         self.right_click_msg = (By.ID, "rightClickMessage")
         self.dynamic_click_msg = (By.ID, "dynamicClickMessage")
@@ -59,8 +60,15 @@ class ButtonsPage:
         expected_text = locator_to_text.get(expected_locator)
         assert expected_text, "Unknown locator passed to assert_only_message_visible"
 
-        # Poll page_source for up to 5 seconds
-        end_time = time.time() + 5
+        # Try to scroll the expected message into view once (helps in headless/CI)
+        try:
+            el = self.driver.find_element(*expected_locator)
+            self.driver.execute_script("arguments[0].scrollIntoView(true);", el)
+        except Exception:
+            pass
+
+        # Poll page_source for up to 8 seconds to allow for slow rendering in CI
+        end_time = time.time() + 8
         found = False
         while time.time() < end_time and not found:
             if expected_text in self.driver.page_source:
