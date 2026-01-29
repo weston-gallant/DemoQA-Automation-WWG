@@ -11,40 +11,10 @@ Automated end-to-end UI tests for [DemoQA](https://demoqa.com) using **Python**,
 - **Headless & CI-ready**: Headless Chrome support via environment variable (`HEADLESS=true`) for reliable CI runs.
 - **Allure reporting**: Rich test reports with step-level logging and screenshots on failure.
 
-## Project structure
+## Additional Info:
 
-DemoQA-AUTOMATION-WWG/
-├── data/
-│   ├── practice_form_data.py
-│   └── text_box_data.py
-├── features/
-│   ├── alerts.feature
-│   ├── buttons.feature
-│   ├── checkboxes.feature
-│   ├── environment.py
-│   ├── practice_form.feature
-│   ├── text_box.feature
-│   └── steps/
-│       ├── alerts_steps.py
-│       ├── buttons_steps.py
-│       ├── checkboxes_steps.py
-│       ├── practice_form_steps.py
-│       └── text_box_steps.py
-├── pages/
-│   ├── __pycache__/        # ignored by git
-│   ├── alerts_page.py
-│   ├── buttons_page.py
-│   ├── checkboxes_page.py
-│   ├── practice_forms_page.py
-│   └── text_box_page.py
-├── reports/
-│   ├── allure-report/      # generated HTML reports (gitignored)
-│   └── allure-results/     # raw Allure results from Behave (gitignored)
-├── utils/                  # (empty/for future helpers – optional)
-├── .gitattributes
-├── .gitignore
-├── behave.ini
-├── config.ini              # (not currently used in the project)
-├── pyproject.toml          # (if present for tooling/deps)
-├── README.md
-└── requirements.txt
+Want to run the tests? Check [docs/RUNNING_TESTS.md](https://github.com/weston-gallant/DemoQA-Automation-WWG/blob/main/docs/RUNNING_TESTS.md) to get started!
+
+Feel free to email me wesgallant97@gmail.com for any questions / concerns / feedback
+
+Thank you for taking a look at my homemade regression suite! 
