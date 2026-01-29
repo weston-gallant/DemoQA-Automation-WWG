@@ -22,13 +22,22 @@ cd DemoQA-AUTOMATION-WWG
 
 python -m venv .venv
 
-# Windows (PowerShell)
+---
+
+Windows (PowerShell):
+
 .venv\Scripts\Activate.ps1
 
-# Windows (cmd)
+---
+
+Windows (cmd):
+
 .venv\Scripts\activate.bat
 
-# macOS / Linux
+---
+
+macOS / Linux:
+
 source .venv/bin/activate
 
 ---
