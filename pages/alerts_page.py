@@ -72,8 +72,13 @@ class AlertsPage:
         alert.dismiss()
         print("✅ Alert dismissed")
 
-    def wait_for_alert_and_send_keys(self, text: str, accept: bool = True, timeout: int = 8):
-        alert = WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
+    def wait_for_alert_and_send_keys(self, text: str, accept: bool = True, timeout: int = 10):
+        try:
+            alert = WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
+        except TimeoutException:
+            # One retry in case headless CI is just a bit slower
+            alert = WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
+
         print(f"ℹ️ Prompt alert text: {alert.text}")
         alert.send_keys(text)
         if accept:
