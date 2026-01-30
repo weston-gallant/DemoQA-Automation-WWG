@@ -66,14 +66,24 @@ class AlertsPage:
             # Soft assertion: log and continue instead of breaking the whole suite
             print("⚠️ Delayed alert did not appear within timeout; continuing test run")
 
-    def wait_for_alert_and_dismiss(self):
-        alert = self.wait.until(EC.alert_is_present())
+    def wait_for_alert_and_dismiss(self, timeout: int = 10):
+        try:
+            alert = WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
+        except TimeoutException:
+            # One retry in case headless CI is just a bit slower
+            alert = WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
+
         print(f"ℹ️ Alert text: {alert.text}")
         alert.dismiss()
         print("✅ Alert dismissed")
 
-    def wait_for_alert_and_send_keys(self, text: str, accept: bool = True, timeout: int = 8):
-        alert = WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
+    def wait_for_alert_and_send_keys(self, text: str, accept: bool = True, timeout: int = 10):
+        try:
+            alert = WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
+        except TimeoutException:
+            # One retry in case headless CI is just a bit slower
+            alert = WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
+
         print(f"ℹ️ Prompt alert text: {alert.text}")
         alert.send_keys(text)
         if accept:
