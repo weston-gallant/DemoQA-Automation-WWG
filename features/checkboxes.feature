@@ -10,12 +10,12 @@ Feature: DemoQA Check Box coverage
   Scenario: User can select multiple leaf check boxes
     Given I am on the check box page
     When I expand all check boxes
-    And I select the following check boxes:
+    And I select the following check boxes
       | label      |
       | Desktop    |
       | Documents  |
       | Downloads  |
-    Then I see all of these in the selected results:
+    Then I see all of these in the selected results
       | result_key |
       | desktop    |
       | documents  |
