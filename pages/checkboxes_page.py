@@ -21,11 +21,11 @@ class CheckboxesPage:
         print("✅ Expanded all check boxes")
 
     def select_checkbox_by_label(self, label_text: str):
-        # Click on the label that has the given text
-        # DemoQA check box labels use span[text()='<label>'] under a label/span container
+        # DemoQA check box labels use span.rct-title with the label text
         xpath = f"//span[@class='rct-title' and text()='{label_text}']"
         element = self.wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
-        element.click()
+        # Use JS click to avoid ElementClickIntercepted in headless CI
+        self.driver.execute_script("arguments[0].click();", element)
         print(f"✅ Selected checkbox: {label_text}")
 
     def get_selected_result_text(self) -> str:
