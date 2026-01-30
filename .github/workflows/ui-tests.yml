@@ -5,6 +5,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:    # <— allows manual trigger from Actions tab
 
 jobs:
   ui-tests:
